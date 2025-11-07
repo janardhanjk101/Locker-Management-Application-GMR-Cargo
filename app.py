@@ -27,7 +27,7 @@ ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 
 # Default credentials (change these!)
 ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'admin123'
+ADMIN_PASSWORD = 'Bluebird@2025'
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)

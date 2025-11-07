@@ -1,0 +1,3 @@
+PS C:\Users\Janardhan\Desktop\Locker_Management> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\Janardhan\Desktop\Locker_Management> .\venv\Scripts\Activate.ps1
+(venv) PS C:\Users\Janardhan\Desktop\Locker_Management> python .\app.py
