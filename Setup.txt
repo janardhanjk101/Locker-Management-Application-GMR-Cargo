@@ -1,0 +1,356 @@
+# Locker Management System
+
+A beautiful 3-tier locker management system with Apple-inspired design, featuring glassmorphism effects, black theme with fire orange accents, login authentication, and Excel import/export capabilities.
+
+## Features
+
+- 🔐 **Secure Login System** - Password-protected access
+- 🎨 **Modern UI** - Glassmorphism with black and fire orange theme
+- 📥 **Import Excel** - Bulk upload locker data from Excel files
+- 📤 **Export Excel** - Download all locker data to Excel
+- 🔍 **Real-time Search** - Search across all locker parameters
+- 📊 **Live Statistics** - Dashboard with occupancy stats
+- ⏰ **Live DateTime** - Real-time clock in the header
+- 👤 **Credits** - "Made by Janardhan" attribution
+- 🔐 **300 Lockers** - Full management support
+- 💾 **SQLite Database** - Easy to maintain, no technical setup
+
+## Project Structure
+
+```
+locker-management/
+├── app.py                    # Flask backend
+├── requirements.txt          # Python dependencies
+├── lockers.db               # SQLite database (auto-created)
+├── uploads/                 # Upload folder (auto-created)
+└── templates/
+    ├── login.html           # Login page
+    └── index.html           # Main dashboard
+```
+
+## Installation & Setup
+
+### Step 1: Install Python
+Make sure you have Python 3.8 or higher installed. Check with:
+```bash
+python --version
+```
+
+### Step 2: Create Project Directory
+```bash
+mkdir locker-management
+cd locker-management
+```
+
+### Step 3: Create Virtual Environment (Recommended)
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Step 4: Install Dependencies
+Create `requirements.txt` with the provided content, then run:
+```bash
+pip install -r requirements.txt
+```
+
+### Step 5: Create Templates Folder
+```bash
+mkdir templates
+```
+
+### Step 6: Add Files
+- Save `app.py` in the root directory
+- Save `login.html` in the `templates` folder
+- Save `index.html` in the `templates` folder
+
+### Step 7: Run the Application
+```bash
+python app.py
+```
+
+The application will start on `http://localhost:5000`
+
+## Default Login Credentials
+
+```
+Username: admin
+Password: admin123
+```
+
+**IMPORTANT:** Change these credentials in production by editing the `app.py` file:
+```python
+ADMIN_USERNAME = 'your-username'
+ADMIN_PASSWORD = 'your-secure-password'
+```
+
+## Usage
+
+### Login
+1. Open `http://localhost:5000` in your browser
+2. Enter username and password
+3. Click "Login"
+
+### Main Dashboard
+1. **View Lockers**: See all 300 lockers in a beautiful grid
+2. **Real-time Clock**: Top right corner shows current date and time
+3. **Search**: Use the search box to find lockers by any parameter
+4. **Filter**: Click "All", "Occupied", or "Available" buttons
+5. **Statistics**: View total, occupied, and available lockers
+
+### Assign/Edit Locker
+1. Click on any locker card
+2. Fill in employee details
+3. Click "Save"
+
+### Clear Locker
+1. Open a locker's detail modal
+2. Click "Clear Locker" button
+3. Confirm the action
+
+### Import Excel
+1. Click "📥 Import Excel" button
+2. Select your Excel file (.xlsx or .xls)
+3. File will be uploaded and data imported automatically
+
+**Excel File Format Required:**
+The Excel file must have these exact column names:
+- `locker_no` (1-300)
+- `gc_no`
+- `emp_no`
+- `name`
+- `designation`
+- `department`
+- `gender`
+- `from_date`
+- `to_date`
+
+**Sample Excel Structure:**
+| locker_no | gc_no | emp_no | name | designation | department | gender | from_date | to_date |
+|-----------|-------|--------|------|-------------|------------|--------|-----------|---------|
+| 1 | GC001 | E001 | John Doe | Manager | IT | Male | 2024-01-01 | 2024-12-31 |
+| 2 | GC002 | E002 | Jane Smith | Developer | IT | Female | 2024-01-01 | 2024-12-31 |
+
+### Export Excel
+1. Click "📤 Export Excel" button
+2. File will download automatically with timestamp
+3. Opens with Excel, Google Sheets, or any spreadsheet software
+
+### Logout
+Click "Logout" button in the top right corner
+
+## Database Structure
+
+The SQLite database has one table: `lockers`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| locker_no | INTEGER | Primary key (1-300) |
+| gc_no | TEXT | GC/Employee code |
+| emp_no | TEXT | Employee number |
+| name | TEXT | Employee name |
+| designation | TEXT | Job designation |
+| department | TEXT | Department name |
+| gender | TEXT | Gender (Male/Female/Other) |
+| from_date | TEXT | Assignment start date |
+| to_date | TEXT | Assignment end date |
+| is_empty | INTEGER | 1 = empty, 0 = occupied |
+
+## API Endpoints
+
+### Authentication
+- `POST /api/login` - Login with credentials
+- `POST /api/logout` - Logout current session
+- `GET /api/check-auth` - Check authentication status
+
+### Locker Management
+- `GET /api/lockers` - Get all lockers (supports search & filter)
+- `GET /api/lockers/<locker_no>` - Get specific locker details
+- `PUT /api/lockers/<locker_no>` - Update locker details
+- `DELETE /api/lockers/<locker_no>` - Clear locker
+- `GET /api/stats` - Get statistics
+
+### Import/Export
+- `POST /api/import-excel` - Import Excel file
+- `GET /api/export-excel` - Export to Excel
+
+## Database Management
+
+### Backup Database
+```bash
+# Simply copy the lockers.db file
+cp lockers.db lockers_backup_$(date +%Y%m%d).db
+```
+
+### Reset Database
+```bash
+# Delete the database file and restart the app
+rm lockers.db
+python app.py
+```
+
+### View Database (Optional)
+```bash
+sqlite3 lockers.db
+.tables
+SELECT * FROM lockers LIMIT 10;
+.quit
+```
+
+## Troubleshooting
+
+### Port Already in Use
+Modify the last line in `app.py`:
+```python
+app.run(debug=True, host='0.0.0.0', port=5001)  # Change to any free port
+```
+
+### Import Excel Not Working
+- Ensure your Excel file has the exact column names (case-sensitive)
+- Check that locker_no values are between 1-300
+- Verify the file format is .xlsx or .xls
+
+### Session Issues
+Clear browser cookies or restart the Flask application
+
+### Cannot Upload Files
+Ensure the `uploads` folder exists or the app has write permissions
+
+## Security Recommendations
+
+### For Production Use:
+
+1. **Change Secret Key** in `app.py`:
+```python
+app.secret_key = 'generate-a-random-secure-key-here'
+```
+
+2. **Change Default Credentials**:
+```python
+ADMIN_USERNAME = 'your-secure-username'
+ADMIN_PASSWORD = 'your-secure-password'
+```
+
+3. **Use Environment Variables**:
+```python
+import os
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback-key')
+ADMIN_USERNAME = os.environ.get('ADMIN_USER', 'admin')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASS', 'admin123')
+```
+
+4. **Enable HTTPS** when deploying to production
+
+5. **Add Password Hashing** (use werkzeug.security)
+
+## Customization
+
+### Change Login Credentials
+Edit in `app.py`:
+```python
+ADMIN_USERNAME = 'newusername'
+ADMIN_PASSWORD = 'newpassword'
+```
+
+### Change Colors
+Edit CSS in `index.html` and `login.html`:
+- Fire orange gradient: `#ff6600, #ff9933`
+- Background: `#000000, #1a1a1a, #2d1810`
+
+### Modify Number of Lockers
+In `app.py`, change the range:
+```python
+for i in range(1, 501):  # For 500 lockers
+    conn.execute('INSERT INTO lockers (locker_no) VALUES (?)', (i,))
+```
+
+### Change Attribution
+Edit in both `index.html` and `login.html`:
+```html
+<div class="made-by">Made by <span>Your Name</span></div>
+```
+
+## Production Deployment
+
+For production environments:
+
+1. Set `debug=False` in `app.py`
+2. Use a production WSGI server:
+```bash
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+```
+3. Set up proper environment variables
+4. Configure a reverse proxy (nginx/Apache)
+5. Enable HTTPS with SSL certificates
+6. Set up regular database backups
+7. Implement proper password hashing
+8. Add rate limiting for API endpoints
+9. Use a more robust session management
+
+## Common Issues & Solutions
+
+### Issue: Login page not showing
+**Solution**: Clear browser cache and ensure `login.html` is in the `templates` folder
+
+### Issue: Excel import fails
+**Solution**: Check column names match exactly and file format is correct
+
+### Issue: DateTime not updating
+**Solution**: Check if JavaScript is enabled in your browser
+
+### Issue: "Unauthorized" error
+**Solution**: Login again or check if session has expired
+
+## Features Explanation
+
+### Real-time Clock
+- Updates every second
+- Shows full date with day, time including seconds
+- Located in top right corner
+
+### Excel Import/Export
+- Import: Bulk upload data from Excel files
+- Export: Download current data with timestamp
+- Supports .xlsx and .xls formats
+
+### Login Security
+- Session-based authentication
+- Protected API endpoints
+- Automatic logout capability
+
+### Made by Janardhan
+- Attribution shown on both login and main page
+- Stylized with fire orange color
+
+## Support
+
+For issues or questions:
+1. Check console for error messages (F12 in browser)
+2. Verify all files are in correct directories
+3. Ensure Python dependencies are installed
+4. Check that port 5000 is available
+5. Verify Excel file format for imports
+
+## License
+
+Free to use and modify for your organization.
+
+---
+🧩 Fix:
+
+You can allow script execution just for your current PowerShell session (safe and temporary):
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+
+Then run your activation command again:
+
+venv\Scripts\activate
+
+**Developed by Janardhan**
